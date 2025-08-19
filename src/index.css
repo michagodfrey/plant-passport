@@ -2,41 +2,84 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* PlantPassport.ai Design System - Agricultural Professional Theme */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Core background and text */
+    --background: 48 6% 98%;
+    --foreground: 120 8% 18%;
 
+    /* Card system */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 120 8% 18%;
 
+    /* Popover system */
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 120 8% 18%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary - Forest Green for trust and nature */
+    --primary: 134 45% 28%;
+    --primary-foreground: 0 0% 98%;
+    --primary-hover: 134 45% 22%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary - Sage Green */
+    --secondary: 120 12% 92%;
+    --secondary-foreground: 120 8% 18%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted tones */
+    --muted: 120 8% 96%;
+    --muted-foreground: 120 6% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent - Warm earth tone */
+    --accent: 35 15% 92%;
+    --accent-foreground: 35 25% 25%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Status colors */
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 98%;
+    --warning: 40 95% 55%;
+    --warning-foreground: 40 25% 15%;
+    --success: 134 45% 45%;
+    --success-foreground: 0 0% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Interactive elements */
+    --border: 120 12% 87%;
+    --input: 120 12% 94%;
+    --ring: 134 45% 28%;
 
-    --radius: 0.5rem;
+    /* Layout */
+    --radius: 0.75rem;
+
+    /* Gradients */
+    --gradient-header: linear-gradient(135deg, hsl(134, 45%, 28%) 0%, hsl(134, 35%, 35%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0, 0%, 100%) 0%, hsl(120, 8%, 98%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(134, 45%, 45%) 0%, hsl(134, 35%, 52%) 100%);
+
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -4px hsl(120, 8%, 18%, 0.08);
+    --shadow-medium: 0 8px 32px -8px hsl(120, 8%, 18%, 0.12);
+    --shadow-strong: 0 12px 48px -12px hsl(120, 8%, 18%, 0.16);
+
+    /* Typography scale */
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 1.875rem;
+    --font-size-4xl: 2.25rem;
+
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -100,6 +143,51 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  /* Print styles for structured results */
+  @media print {
+    .print-hidden {
+      display: none !important;
+    }
+    
+    .print-only {
+      display: block !important;
+    }
+    
+    .print-page {
+      margin: 0;
+      padding: 1rem;
+      box-shadow: none;
+      border: none;
+    }
+    
+    .print-header {
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid hsl(var(--border));
+    }
+  }
+
+  /* Custom components */
+  .header-gradient {
+    background: var(--gradient-header);
+  }
+  
+  .card-gradient {
+    background: var(--gradient-card);
+  }
+  
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  
+  .shadow-medium {
+    box-shadow: var(--shadow-medium);
+  }
+  
+  .shadow-strong {
+    box-shadow: var(--shadow-strong);
   }
 }
