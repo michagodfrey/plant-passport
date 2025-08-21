@@ -27,13 +27,14 @@ export function FAQ() {
   ];
 
   return (
-    <Card className="shadow-medium">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <HelpCircle className="w-5 h-5 text-primary" />
-          Frequently Asked Questions
-        </CardTitle>
-      </CardHeader>
+    <section id="faqs">
+      <Card className="shadow-medium">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <HelpCircle className="w-5 h-5 text-primary" />
+            Frequently Asked Questions
+          </CardTitle>
+        </CardHeader>
       <CardContent>
         <Accordion type="single" collapsible className="w-full">
           {faqs.map((faq, index) => (
@@ -49,5 +50,6 @@ export function FAQ() {
         </Accordion>
       </CardContent>
     </Card>
+    </section>
   );
 }

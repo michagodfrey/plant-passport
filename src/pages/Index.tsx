@@ -3,9 +3,11 @@ import { Header } from "@/components/Header";
 import { InputTabs } from "@/components/InputTabs";
 import { Results } from "@/components/Results";
 import { FAQ } from "@/components/FAQ";
+import { ResourceGrid } from "@/components/ResourceGrid";
 import { Footer } from "@/components/Footer";
 import { fetchRequirements } from "@/services/mock-backend";
 import { GuidedInput, AskInput, BackendResponse } from "@/types/plant-passport";
+import { RESOURCES } from "@/data/resources";
 import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
@@ -83,6 +85,8 @@ const Index = () => {
         )}
         
         <FAQ />
+        
+        <ResourceGrid resources={RESOURCES} />
       </main>
       
       <Footer />
