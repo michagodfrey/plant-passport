@@ -1,73 +1,91 @@
-# Welcome to your Lovable project
+# PlantPassport.ai
 
-## Project info
+Credit to **OpenAI**, **Cursor** and **Lovable** for helping get this project to this point.
 
-**URL**: https://lovable.dev/projects/ccbb0de6-cd58-412c-997e-abf3209e5f46
+---
 
-## How can I edit this code?
+## Problem Statement
 
-There are several ways of editing your application.
+Australia's domestic plant quarantine rules are complex and fragmented. They are:
 
-**Use Lovable**
+* **Not curated** in a central, user‑friendly way.
+* Require **time‑consuming lookups** across multiple state manuals.
+* Dependent on **pest status information** that is difficult to locate and often baffling to those unfamiliar with the system.
+* Written in technical language requiring **specialised knowledge** to interpret.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/ccbb0de6-cd58-412c-997e-abf3209e5f46) and start prompting.
+State governments do not do a good job of making this information public or accessible, leaving producers and the public struggling to understand what applies to them.
 
-Changes made via Lovable will be committed automatically to this repo.
+This project addresses that gap.
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## What this project is (and isn't)
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+* ✅ **Public information only** - all data is sourced from publicly available quarantine manuals and established pest location records.
+* ✅ **Educational and supportive tool** - helps users understand what they are in for if they want to move plants commercially.
+* ✅ **Fallback to authorities** - all outputs direct users back to the relevant biosecurity authority for final confirmation.
+* ❌ **Not a business idea** - this project will not make money.
+* ❌ **Not legally risky** - there is no mechanism for liability, as advice always refers back to official authorities.
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Who is this for?
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+* **Producers** - moving fruit, vegetables, nursery stock, soil, or related plant material.
+* **House movers** - individuals relocating and unsure what plants they can take.
+* **Regulators** - inspectors or policy officers looking for a quick reference.
 
-# Step 3: Install the necessary dependencies.
-npm i
+---
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+## Roadmap / To‑Do
 
-**Edit a file directly in GitHub**
+A comprehensive task list is in [`docs/todo.md`](./docs/todo.md). Resources for the knowledge base are in [`docs/resources.md`](./docs/resources.md).
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Key deliverables:
 
-**Use GitHub Codespaces**
+* **AI Integration** - natural language interface to query conditions.
+* **Knowledge Base** - structured import conditions for each state.
+* **Plant Pest & Disease Database** - authoritative host/pest mapping.
+* **Mapping** - pest distributions and area freedom zones.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## Project Info
+
+**Frontend developed by Lovable**: [https://lovable.dev/projects/ccbb0de6-cd58-412c-997e-abf3209e5f46](https://lovable.dev/projects/ccbb0de6-cd58-412c-997e-abf3209e5f46)
+
+### Tech Stack
 
 This project is built with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+* Vite
+* TypeScript
+* React
+* shadcn‑ui
+* Tailwind CSS
 
-## How can I deploy this project?
+---
 
-Simply open [Lovable](https://lovable.dev/projects/ccbb0de6-cd58-412c-997e-abf3209e5f46) and click on Share -> Publish.
+## Development
 
-## Can I connect a custom domain to my Lovable project?
+### Local Development
 
-Yes, you can!
+```sh
+# Clone the repository
+git clone <YOUR_GIT_URL>
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+# Enter project directory
+cd <YOUR_PROJECT_NAME>
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+# Install dependencies
+npm i
+
+# Run the development server
+npm run dev
+```
+
+### Edit via Lovable
+
+* Open the [Lovable Project](https://lovable.dev/projects/ccbb0de6-cd58-412c-997e-abf3209e5f46)
+* Start prompting to make edits.
+* Changes commit automatically back to this repo.
