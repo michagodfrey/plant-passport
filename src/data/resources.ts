@@ -4,162 +4,163 @@ export const RESOURCES: JurisdictionResources[] = [
   {
     key: "AUS",
     title: "Australia-wide",
-    coatSrc: "/coats/aus.svg",
+    coatSrc: "/1912-coat-of-arms-1280.webp",
     links: [
       {
         label: "National Quarantine information",
         href: "https://interstatequarantine.org.au/producers/committees/quarantine-regulators/",
-        tag: "National"
+        tag: "National",
       },
       {
         label: "Current pest outbreaks in Australia",
         href: "https://www.outbreak.gov.au/current-outbreaks?kind=list",
-        tag: "Outbreaks"
-      }
-    ]
+        tag: "Outbreaks",
+      },
+    ],
   },
   {
     key: "NSW",
     title: "New South Wales",
-    coatSrc: "/coats/nsw.svg",
+    coatSrc: "/PRIMARY-nsw-government-logo.png",
     links: [
       {
-        label: "NSW DPI – Contacts",
+        label: "NSW DPI - Contacts",
         href: "https://www.dpi.nsw.gov.au/biosecurity2/plant/market-access/contacts",
-        tag: "Contacts"
+        tag: "Contacts",
       },
       {
         label: "Plant Biosecurity (NSW DPI)",
         href: "https://www.dpi.nsw.gov.au/dpi/biosecurity/plant-biosecurity",
-        tag: "Guide"
+        tag: "Guide",
       },
       {
         label: "Movement conditions: plants, soil, machinery",
         href: "https://www.dpi.nsw.gov.au/biosecurity2/plant/exotic-plant-pests-and-diseases/restrictions-on-moving-plants,-plant-products,-soil-and-equipment/information-for-restrictions-on-moving-plants,-plant-products,-soil-and-agricultural-equipment2/information-for-restrictions-on-moving-plants,-plant-products,-soil-and-agricultural-equipment/entry-conditions/potplants-soil-machinery",
-        tag: "Guide"
+        tag: "Guide",
       },
       {
         label: "Movement conditions: fresh produce",
         href: "https://www.dpi.nsw.gov.au/biosecurity2/plant/exotic-plant-pests-and-diseases/restrictions-on-moving-plants,-plant-products,-soil-and-equipment/information-for-restrictions-on-moving-plants,-plant-products,-soil-and-agricultural-equipment2/information-for-restrictions-on-moving-plants,-plant-products,-soil-and-agricultural-equipment/entry-conditions/fresh-produce",
-        tag: "Guide"
+        tag: "Guide",
       },
       {
         label: "NSW biosecurity zones & moving within NSW",
         href: "https://www.dpi.nsw.gov.au/dpi/biosecurity/plant-biosecurity/market-access-and-trade/nsw-movement-zones",
-        tag: "Zones"
-      }
-    ]
+        tag: "Zones",
+      },
+    ],
   },
   {
     key: "NT",
     title: "Northern Territory",
-    coatSrc: "/coats/nt.svg",
+    coatSrc: "/ntg-flag-flying2-cmyk.webp",
     links: [
       {
         label: "Plants & quarantine (overview)",
         href: "https://nt.gov.au/industry/agriculture/food-crops-plants-and-quarantine/plants-and-quarantine",
-        tag: "Guide"
+        tag: "Guide",
       },
       {
-        label: "Plant Biosecurity – contact",
+        label: "Plant Biosecurity -contact",
         href: "https://nt.gov.au/industry/agriculture/food-crops-plants-and-quarantine/plants-and-quarantine/contact-plant-biosecurity",
-        tag: "Contacts"
-      }
-    ]
+        tag: "Contacts",
+      },
+    ],
   },
   {
     key: "QLD",
     title: "Queensland",
-    coatSrc: "/coats/qld.svg",
+    coatSrc: "/Queensland_Government_logo.webp",
     links: [
       {
         label: "Biosecurity zones (QLD)",
         href: "https://www.business.qld.gov.au/industries/farms-fishing-forestry/agriculture/biosecurity/plants/moving/restrictions/zones",
-        tag: "Zones"
+        tag: "Zones",
       },
       {
         label: "Moving within QLD",
         href: "https://www.business.qld.gov.au/industries/farms-fishing-forestry/agriculture/biosecurity/plants/moving/restrictions/within-qld",
-        tag: "Guide"
+        tag: "Guide",
       },
       {
         label: "Moving into QLD (PQM landing)",
         href: "https://www.business.qld.gov.au/industries/farms-fishing-forestry/agriculture/biosecurity/plants/moving/restrictions/into-qld",
-        tag: "PQM"
+        tag: "PQM",
       },
       {
         label: "Department contact (DAF/DPI)",
         href: "https://www.dpi.qld.gov.au/contact",
-        tag: "Contacts"
-      }
-    ]
+        tag: "Contacts",
+      },
+    ],
   },
   {
     key: "SA",
     title: "South Australia",
-    coatSrc: "/coats/sa.svg",
+    coatSrc: "/Brand_SouthAust1_RGB.webp",
     links: [
       {
         label: "Plant Quarantine Standard (PQS/PQM)",
         href: "https://pir.sa.gov.au/biosecurity/plant_health/plant_quarantine_standard_and_updated_conditions",
-        tag: "PQM"
+        tag: "PQM",
       },
       {
-        label: "Importing commercial plants & products (plain English) + contacts",
+        label:
+          "Importing commercial plants & products (plain English) + contacts",
         href: "https://pir.sa.gov.au/biosecurity/plant_health/importing_commercial_plants_and_plant_products",
-        tag: "Guide"
-      }
-    ]
+        tag: "Guide",
+      },
+    ],
   },
   {
     key: "TAS",
     title: "Tasmania",
-    coatSrc: "/coats/tas.svg",
+    coatSrc: "/Tas-Gov-logo-colour-vert.webp",
     links: [
       {
         label: "Importing plants (info & contacts)",
         href: "https://nre.tas.gov.au/biosecurity-tasmania/biosecurity/importing-plants",
-        tag: "Guide"
+        tag: "Guide",
       },
       {
         label: "Plant Biosecurity Manual (PQM)",
         href: "https://nre.tas.gov.au/biosecurity-tasmania/plant-biosecurity/plant-biosecurity-manual",
-        tag: "PQM"
-      }
-    ]
+        tag: "PQM",
+      },
+    ],
   },
   {
     key: "VIC",
     title: "Victoria",
-    coatSrc: "/coats/vic.svg",
+    coatSrc: "/VicGov-Victoria-Blue.png",
     links: [
       {
         label: "Moving plants & plant products (PQM + contact)",
         href: "https://agriculture.vic.gov.au/biosecurity/moving-plants-and-plant-products",
-        tag: "PQM"
-      }
-    ]
+        tag: "PQM",
+      },
+    ],
   },
   {
     key: "WA",
     title: "Western Australia",
-    coatSrc: "/coats/wa.svg",
+    coatSrc: "/COA-with-text-GoWA-colour.webp",
     links: [
       {
         label: "Importing plants & products (info & DPIRD contact)",
         href: "https://www.dpird.wa.gov.au/businesses/biosecurity/importing-and-exporting-quarantine-wa/importing-plants-and-plant-products/",
-        tag: "Guide"
+        tag: "Guide",
       },
       {
         label: "Quarantine import search",
         href: "https://www.dpird.wa.gov.au/businesses/biosecurity/importing-and-exporting-quarantine-wa/importing-plants-and-plant-products/",
-        tag: "Search"
+        tag: "Search",
       },
       {
         label: "Western Australian Organism List (WAOL)",
         href: "https://www.dpird.wa.gov.au/online-tools/western-australian-organism-list/",
-        tag: "Search"
-      }
-    ]
-  }
+        tag: "Search",
+      },
+    ],
+  },
 ];
