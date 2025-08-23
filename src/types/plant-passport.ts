@@ -1,4 +1,5 @@
 // PlantPassport.ai Type Definitions
+import type { Commodity, State, Pest, PestPresence, ImportRequirement } from './database';
 
 export type AustralianState = "QLD" | "NSW" | "VIC" | "SA" | "WA" | "TAS" | "NT" | "ACT";
 
@@ -6,15 +7,15 @@ export type GuidedInput = {
   commodity: string;
   origin: AustralianState;
   destination: AustralianState;
-  locationDetail?: { 
-    address?: string; 
-    suburb?: string; 
-    postcode?: string; 
+  locationDetail?: {
+    address?: string;
+    suburb?: string;
+    postcode?: string;
   };
 };
 
-export type AskInput = { 
-  message: string; 
+export type AskInput = {
+  message: string;
 };
 
 export type StructuredRule = {
@@ -39,3 +40,26 @@ export type BackendResponse = {
 };
 
 export type QueryInput = GuidedInput | AskInput;
+
+// Enhanced types for database integration
+export type EnhancedGuidedInput = {
+  commodity: Commodity;
+  origin: State;
+  destination: State;
+  locationDetail?: {
+    address?: string;
+    suburb?: string;
+    postcode?: string;
+  };
+};
+
+export type ComplianceAnalysisResult = {
+  commodity: Commodity;
+  origin: State;
+  destination: State;
+  pests: Pest[];
+  pestPresence: PestPresence[];
+  applicableRequirements: ImportRequirement[];
+  nonApplicableRequirements: ImportRequirement[];
+  summary: string;
+};
