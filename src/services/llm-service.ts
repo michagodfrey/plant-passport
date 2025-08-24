@@ -123,24 +123,51 @@ export class LLMService {
 
             // Debug: Log request payload
             console.log('LLM Service: Making request to Edge Function');
-            console.log('Request payload:', JSON.stringify(requestPayload, null, 2));
+            console.log('Request payload size:', JSON.stringify(requestPayload).length);
+            console.log('Request payload keys:', Object.keys(requestPayload));
+            console.log('Supabase client available:', !!supabase);
+            console.log('Functions available:', !!supabase.functions);
 
-            // Make request to Edge Function with timeout
-            const requestPromise = supabase.functions.invoke(this.EDGE_FUNCTION_NAME, {
-                body: requestPayload,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
+            // Try direct fetch as fallback if Supabase client fails
+            const makeDirectRequest = async () => {
+                const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+                const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+                const response = await fetch(`${supabaseUrl}/functions/v1/${this.EDGE_FUNCTION_NAME}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${supabaseKey}`,
+                        'Content-Type': 'application/json',
+                        'apikey': supabaseKey,
+                    },
+                    body: JSON.stringify(requestPayload),
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP ${response.status}: ${errorText}`);
+                }
+
+                return { data: await response.json(), error: null };
+            };
+
+            // Use direct fetch for now since Supabase client has issues
+            console.log('LLM Service: Using direct fetch approach');
+            const requestPromise = makeDirectRequest();
 
             const { data, error } = await Promise.race([requestPromise, timeoutPromise]);
 
+            console.log('LLM Service: Response received');
+            console.log('Data:', data);
+            console.log('Error:', error);
+
             if (error) {
                 console.error('Edge Function error:', error);
+                console.error('Error details:', JSON.stringify(error, null, 2));
                 return {
                     summary: '',
                     success: false,
-                    error: `Failed to generate summary: ${error.message}`
+                    error: `Failed to generate summary: ${error.message || JSON.stringify(error)}`
                 };
             }
 

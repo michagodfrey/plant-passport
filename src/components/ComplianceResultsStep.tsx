@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Separator } from '@/components/ui/separator';
 import { CheckCircle, XCircle, AlertTriangle, ChevronDown, ChevronUp, FileText, Shield, Sparkles } from 'lucide-react';
+import { markdownToHtml } from '@/utils/markdown';
 import type { FormStepProps } from '@/types/form-steps';
 import type { ComplianceResult, ApplicableRequirement, NonApplicableRequirement } from '@/types/compliance';
 import { complianceEngine } from '@/services/compliance-engine';
@@ -259,7 +260,10 @@ export function ComplianceResultsStep({
                     <div className="flex items-start gap-2">
                       <Sparkles className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
                       <div className="flex-1">
-                        <p className="text-sm leading-relaxed text-blue-900">{analysisResult.summary}</p>
+                        <div 
+                          className="text-sm leading-relaxed text-blue-900 prose prose-sm max-w-none"
+                          dangerouslySetInnerHTML={{ __html: markdownToHtml(analysisResult.summary) }}
+                        />
                         {!summaryError && LLMService.isAvailable() && (
                           <p className="text-xs text-blue-600 mt-1">AI-generated summary</p>
                         )}

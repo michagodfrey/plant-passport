@@ -255,62 +255,75 @@ Deno.serve(async (req: Request) => {
         // Debug: Log request details
         console.log(`[Request ${requestId}] Method:`, req.method);
         console.log(`[Request ${requestId}] Headers:`, Object.fromEntries(req.headers.entries()));
-
-        // Check if request has a body
-        const hasBody = req.body !== null;
-        console.log(`[Request ${requestId}] Has body:`, hasBody);
-
-        if (!hasBody) {
-            console.error('Request body is null or empty');
-            return new Response(
-                JSON.stringify({ error: 'Request body is required' }),
-                {
-                    status: 400,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*',
-                    },
-                }
-            );
-        }
+        console.log(`[Request ${requestId}] URL:`, req.url);
 
         // Parse and validate request body
         let requestData;
+        let bodyText = '';
+
         try {
-            // Try to parse as JSON first (for Supabase client requests)
-            try {
-                requestData = await req.json();
-                console.log(`[Request ${requestId}] Parsed JSON directly`);
-            } catch (jsonError) {
-                console.log(`[Request ${requestId}] Direct JSON parsing failed, trying text method`);
+            // Read the body as text first to see what we're dealing with
+            bodyText = await req.text();
+            console.log(`[Request ${requestId}] Raw body length:`, bodyText.length);
+            console.log(`[Request ${requestId}] Raw body preview:`, bodyText.substring(0, 300));
+            console.log(`[Request ${requestId}] Content-Type header:`, req.headers.get('content-type'));
 
-                // If that fails, try reading as text first (for raw requests)
-                const bodyText = await req.text();
-                console.log(`[Request ${requestId}] Body text length:`, bodyText.length);
-                console.log(`[Request ${requestId}] Body preview:`, bodyText.substring(0, 200));
-
-                if (!bodyText || bodyText.trim() === '') {
-                    console.error(`[Request ${requestId}] Request body is empty`);
-                    return new Response(
-                        JSON.stringify({ error: 'Request body cannot be empty' }),
-                        {
-                            status: 400,
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Access-Control-Allow-Origin': '*',
-                            },
-                        }
-                    );
-                }
-
-                requestData = JSON.parse(bodyText);
+            if (!bodyText || bodyText.trim() === '') {
+                console.error(`[Request ${requestId}] Request body is empty`);
+                return new Response(
+                    JSON.stringify({ error: 'Request body cannot be empty' }),
+                    {
+                        status: 400,
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': '*',
+                        },
+                    }
+                );
             }
 
-            console.log(`[Request ${requestId}] Request data keys:`, Object.keys(requestData));
+            // Try to parse the body as JSON
+            try {
+                requestData = JSON.parse(bodyText);
+                console.log(`[Request ${requestId}] Successfully parsed JSON`);
+                console.log(`[Request ${requestId}] Parsed data type:`, typeof requestData);
+                console.log(`[Request ${requestId}] Parsed data keys:`, Object.keys(requestData || {}));
+            } catch (jsonError) {
+                console.error(`[Request ${requestId}] JSON parsing failed:`, jsonError.message);
+                console.error(`[Request ${requestId}] Failed to parse body:`, bodyText.substring(0, 500));
+                return new Response(
+                    JSON.stringify({ error: 'Invalid JSON in request body' }),
+                    {
+                        status: 400,
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': '*',
+                        },
+                    }
+                );
+            }
+
+            // Check if we got any data
+            if (!requestData || typeof requestData !== 'object') {
+                console.error(`[Request ${requestId}] Invalid request data type:`, typeof requestData);
+                return new Response(
+                    JSON.stringify({ error: 'Request body must be a valid JSON object' }),
+                    {
+                        status: 400,
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': '*',
+                        },
+                    }
+                );
+            }
+
+            console.log(`[Request ${requestId}] Final request data keys:`, Object.keys(requestData));
         } catch (parseError) {
-            console.error(`[Request ${requestId}] Failed to parse request body:`, parseError);
+            console.error(`[Request ${requestId}] Unexpected parsing error:`, parseError);
+            console.error(`[Request ${requestId}] Body that caused error:`, bodyText.substring(0, 500));
             return new Response(
-                JSON.stringify({ error: 'Invalid JSON in request body' }),
+                JSON.stringify({ error: 'Failed to parse request body' }),
                 {
                     status: 400,
                     headers: {
@@ -321,7 +334,26 @@ Deno.serve(async (req: Request) => {
             );
         }
 
+        // Check if the request data is wrapped (Supabase client sometimes wraps the body)
+        if (requestData && typeof requestData === 'object' && !requestData.commodity) {
+            // Look for the actual data in common wrapper properties
+            const possibleData = requestData.body || requestData.data || requestData.payload;
+            if (possibleData && typeof possibleData === 'object') {
+                console.log(`[Request ${requestId}] Found wrapped data, unwrapping`);
+                requestData = possibleData;
+            }
+        }
+
         if (!validateRequest(requestData)) {
+            console.error(`[Request ${requestId}] Validation failed for request data:`, {
+                hasCommodity: !!requestData?.commodity,
+                hasOrigin: !!requestData?.origin,
+                hasDestination: !!requestData?.destination,
+                hasApplicableRequirements: Array.isArray(requestData?.applicableRequirements),
+                hasNonApplicableRequirements: Array.isArray(requestData?.nonApplicableRequirements),
+                hasPestContext: !!requestData?.pestContext,
+                keys: requestData ? Object.keys(requestData) : 'no data'
+            });
             return new Response(
                 JSON.stringify({ error: 'Invalid request format' }),
                 {
