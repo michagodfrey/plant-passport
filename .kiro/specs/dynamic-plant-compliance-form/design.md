@@ -4,21 +4,13 @@
 
 The dynamic plant compliance form will replace the current static form with an intelligent, step-by-step wizard that guides users through the compliance checking process. The system will leverage the existing Supabase database schema to provide real-time validation, pest identification, and compliance determination. The design focuses on progressive disclosure, where each step builds upon the previous one, ensuring users only see relevant information at the right time.
 
-### Enhanced User Experience with LLM Integration
+### Enhanced Compliance Results with LLM Summarization
 
-To maximize user-friendliness, the system will incorporate LLM capabilities for:
-- **Natural Language Processing:** Users can describe their commodity in plain English (e.g., "I'm moving some apple trees from my orchard")
-- **Intelligent Disambiguation:** LLM helps clarify ambiguous inputs and suggests corrections
-- **Contextual Guidance:** Provides explanations and guidance throughout the process
-- **Conversational Interface:** Alternative chat-based interface alongside the structured form
-
-### MCP Server Integration
-
-The system will expose its functionality through a Model Context Protocol (MCP) server, enabling:
-- **Chatbot Integration:** General-purpose chatbots can access plant compliance data
-- **API Standardization:** Consistent interface for external systems
-- **Extensibility:** Easy integration with other agricultural or regulatory systems
-- **Developer Access:** Third-party applications can leverage the compliance engine
+To improve user understanding of compliance results, the system will incorporate OpenRouter LLM integration for:
+- **Intelligent Summarization:** Generate clear, concise summaries of compliance results in plain language
+- **Contextual Explanations:** Provide easy-to-understand explanations of why certain requirements apply or don't apply
+- **Graceful Degradation:** Display detailed requirements even when LLM service is unavailable
+- **Error Handling:** Robust fallback mechanisms for LLM service failures
 
 ## Architecture
 
@@ -26,21 +18,39 @@ The system will expose its functionality through a Model Context Protocol (MCP) 
 
 ```mermaid
 graph TB
-    A[User Interface] --> B[Form State Manager]
-    A --> N[LLM Chat Interface]
+    A[Frontend - User Interface] --> B[Form State Manager]
     B --> C[Validation Engine]
     B --> D[Supabase Service Layer]
-    N --> O[LLM Service]
-    O --> P[Natural Language Processor]
-    P --> C
+    B --> N[Compliance Engine]
+    N --> O[Frontend LLM Service]
+    O --> P[Backend API Endpoint]
+    P --> Q[OpenRouter API]
+    P --> R[Compliance Summarization]
+    R --> O
+    O --> S[Enhanced Results Display]
+    S --> A
     D --> E[Database Tables]
     C --> F[Real-time Feedback]
     F --> A
     
-    Q[MCP Server] --> D
-    Q --> C
-    R[External Chatbots] --> Q
-    S[Third-party Apps] --> Q
+    subgraph "Frontend (React)"
+        A
+        B
+        C
+        N
+        O
+        S
+    end
+    
+    subgraph "Supabase Edge Functions"
+        P
+        R
+    end
+    
+    subgraph "External Services"
+        Q
+        E
+    end
     
     subgraph "Database Schema"
         E --> G[commodity]
@@ -67,11 +77,6 @@ graph TB
     E --> H[PestAnalysisStep]
     E --> I[ComplianceResultsStep]
     
-    C --> J[ChatInterface]
-    J --> K[MessageList]
-    J --> L[ChatInput]
-    J --> M[PlantSpecialistLLM]
-    
     F --> N[SmartCommoditySearch]
     F --> O[CommodityTypeSelector]
     
@@ -80,35 +85,30 @@ graph TB
     H --> Q[PestList]
     H --> R[PestPresenceIndicator]
     
-    I --> S[RequirementsList]
-    I --> T[NonApplicableList]
+    I --> S[ComplianceSummary]
+    I --> T[RequirementsList]
+    I --> U[NonApplicableList]
     
     subgraph "Shared Services"
-        U[SupabaseService]
-        V[ValidationService]
-        W[ComplianceEngine]
-        M[PlantSpecialistLLM]
-        X[MCPServer]
+        V[SupabaseService]
+        W[ValidationService]
+        X[ComplianceEngine]
+        Y[LLMService]
     end
     
     subgraph "External Integrations"
-        Y[OpenAI/Anthropic API]
-        Z[External Chatbots]
-        AA[Third-party Apps]
+        Z[OpenRouter API]
     end
     
-    N --> U
-    O --> U
-    P --> U
-    Q --> U
-    R --> U
-    S --> W
-    T --> W
-    M --> Y
-    X --> U
-    X --> W
-    Z --> X
-    AA --> X
+    N --> V
+    O --> V
+    P --> V
+    Q --> V
+    R --> V
+    S --> Y
+    T --> X
+    U --> X
+    Y --> Z
 ```
 
 ## Components and Interfaces
@@ -166,21 +166,13 @@ graph TB
 - Zoned status display from pest_state_presence
 - Clear explanations of pest risks
 
-#### 7. ChatInterface (Enhanced)
-**Purpose:** Enhanced "Ask" tab with plant specialist LLM
+#### 7. ComplianceSummary (New)
+**Purpose:** Displays LLM-generated summary of compliance results
 **Features:**
-- Replaces simple textarea with conversational interface
-- Plant specialist persona with domain expertise
-- Integration with compliance database for accurate responses
-- Ability to hand off to guided form when appropriate
-
-#### 8. PlantSpecialistLLM (New)
-**Purpose:** LLM service configured as plant movement specialist
-**Features:**
-- Domain-specific prompting for plant compliance
-- Integration with Supabase data for accurate responses
-- Conversational interface for complex queries
-- Structured data extraction from natural language
+- Shows AI-generated plain language summary above detailed requirements
+- Graceful fallback when LLM service is unavailable
+- Clear, concise explanation of overall compliance situation
+- Integration with OpenRouter API for summary generation
 
 ### Service Layer Interfaces
 
@@ -224,42 +216,24 @@ interface ComplianceEngine {
 #### LLMService
 ```typescript
 interface LLMService {
-  processNaturalLanguageInput(input: string): Promise<ParsedInput>
-  generateClarifyingQuestions(context: Partial<FormData>): Promise<string[]>
-  disambiguateCommodity(input: string, matches: Commodity[]): Promise<DisambiguationResult>
-  explainRequirements(requirements: ApplicableRequirement[]): Promise<string>
-  generateConversationalResponse(context: ConversationContext): Promise<string>
+  generateComplianceSummary(
+    complianceResult: ComplianceResult,
+    formData: FormData
+  ): Promise<string>
+  isAvailable(): boolean
 }
 
-interface ParsedInput {
-  commodity?: string
-  origin?: string
-  destination?: string
-  confidence: number
-  needsClarification: string[]
-}
-
-interface DisambiguationResult {
-  suggestedCommodity: Commodity
-  explanation: string
-  alternatives: Commodity[]
-}
-```
-
-#### MCPServer
-```typescript
-interface MCPServer {
-  // MCP Tool Definitions
-  searchCommodities(query: string): Promise<Commodity[]>
-  validateCommodity(commodityName: string): Promise<ValidationResult>
-  getPestsForCommodity(commodityId: number): Promise<Pest[]>
-  checkPestPresence(pestIds: number[], stateId: number): Promise<PestPresence[]>
-  getComplianceRequirements(
-    commodityId: number,
-    originStateId: number,
-    destinationStateId: number
-  ): Promise<ComplianceResult>
-  explainRequirement(requirementId: number): Promise<string>
+interface ComplianceSummaryRequest {
+  commodity: string
+  origin: string
+  destination: string
+  applicableRequirements: ApplicableRequirement[]
+  nonApplicableRequirements: NonApplicableRequirement[]
+  pestContext: {
+    identifiedPests: Pest[]
+    pestsPresent: Pest[]
+    pestsAbsent: Pest[]
+  }
 }
 ```
 
@@ -300,7 +274,7 @@ interface PestPresence {
 interface ComplianceResult {
   applicable: ApplicableRequirement[]
   nonApplicable: NonApplicableRequirement[]
-  summary: string
+  summary?: string // LLM-generated summary, optional if service unavailable
 }
 
 interface ApplicableRequirement {
@@ -336,6 +310,7 @@ The system will integrate with the existing Supabase schema:
 ### User Experience Errors
 - **Step navigation errors:** Prevent invalid step transitions
 - **Data consistency errors:** Validate data integrity between steps
+- **LLM service errors:** Graceful fallback to display requirements without summary
 - **Timeout errors:** Save progress and allow resumption
 
 ### Error Recovery Strategies
@@ -392,7 +367,19 @@ The system will integrate with the existing Supabase schema:
 
 ## Security Considerations
 
-### Basic Security
-- **Input Validation:** Validate user inputs before database queries
+### Security Considerations
+
+#### API Key Security and Architecture
+- **Supabase Edge Functions:** Use Supabase Edge Functions as secure backend to proxy OpenRouter API requests
+- **Environment Variables:** Store OpenRouter API key securely in Supabase Edge Function environment (OPENROUTER_API_KEY)
+- **Proxy Pattern:** Edge Function validates and sanitizes requests before forwarding to OpenRouter API
+- **Rate Limiting:** Implement rate limiting within Edge Function to prevent abuse and cost overruns
+- **CORS Configuration:** Properly configure CORS in Edge Function for frontend access
+- **Request Validation:** Edge Function validates request structure and content before API calls
+- **Error Handling:** Edge Function provides consistent error responses without exposing sensitive details
+
+#### Basic Security
+- **Input Validation:** Validate user inputs before database queries and LLM requests
 - **Supabase Security:** Use Supabase's built-in security features
-- **API Key Management:** Secure handling of Supabase and LLM API credentials
+- **Request Sanitization:** Sanitize all data sent to OpenRouter API to prevent injection attacks
+- **Error Handling:** Avoid exposing sensitive information in error messages

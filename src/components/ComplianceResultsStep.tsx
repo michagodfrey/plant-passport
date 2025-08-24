@@ -5,11 +5,12 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Separator } from '@/components/ui/separator';
-import { CheckCircle, XCircle, AlertTriangle, ChevronDown, ChevronUp, FileText, Shield } from 'lucide-react';
+import { CheckCircle, XCircle, AlertTriangle, ChevronDown, ChevronUp, FileText, Shield, Sparkles } from 'lucide-react';
 import type { FormStepProps } from '@/types/form-steps';
 import type { ComplianceResult, ApplicableRequirement, NonApplicableRequirement } from '@/types/compliance';
 import { complianceEngine } from '@/services/compliance-engine';
 import { supabaseService } from '@/services/supabase';
+import { LLMService } from '@/services/llm-service';
 
 interface ComplianceResultsStepProps extends FormStepProps {
   complianceResult?: ComplianceResult;
@@ -29,6 +30,8 @@ export function ComplianceResultsStep({
   const [analysisResult, setAnalysisResult] = useState<ComplianceResult | null>(complianceResult || null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
+  const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
+  const [summaryError, setSummaryError] = useState<string | null>(null);
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     applicable: true,
     nonApplicable: false,
@@ -66,12 +69,60 @@ export function ComplianceResultsStep({
       onDataChange({ complianceResult: result });
       
       onAnalysisComplete?.(result);
+
+      // Generate LLM summary after analysis
+      await generateSummary(result);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to analyze compliance requirements';
       setAnalysisError(errorMessage);
       console.error('Compliance analysis error:', err);
     } finally {
       setIsAnalyzing(false);
+    }
+  };
+
+  const generateSummary = async (result: ComplianceResult) => {
+    if (!LLMService.isAvailable()) {
+      // Use fallback summary if LLM service is not available
+      const fallbackSummary = LLMService.generateFallbackSummary(result, data);
+      const updatedResult = { ...result, summary: fallbackSummary };
+      setAnalysisResult(updatedResult);
+      onDataChange({ complianceResult: updatedResult });
+      return;
+    }
+
+    setIsGeneratingSummary(true);
+    setSummaryError(null);
+
+    try {
+      const summaryResponse = await LLMService.generateComplianceSummary(result, data);
+      
+      if (summaryResponse.success && summaryResponse.summary) {
+        const updatedResult = { ...result, summary: summaryResponse.summary };
+        setAnalysisResult(updatedResult);
+        onDataChange({ complianceResult: updatedResult });
+      } else {
+        // Use fallback summary if LLM service fails
+        const fallbackSummary = LLMService.generateFallbackSummary(result, data);
+        const updatedResult = { ...result, summary: fallbackSummary };
+        setAnalysisResult(updatedResult);
+        onDataChange({ complianceResult: updatedResult });
+        
+        if (summaryResponse.error) {
+          setSummaryError(summaryResponse.error);
+        }
+      }
+    } catch (err) {
+      console.error('Summary generation error:', err);
+      // Use fallback summary on error
+      const fallbackSummary = LLMService.generateFallbackSummary(result, data);
+      const updatedResult = { ...result, summary: fallbackSummary };
+      setAnalysisResult(updatedResult);
+      onDataChange({ complianceResult: updatedResult });
+      
+      setSummaryError('Failed to generate AI summary, using standard summary instead');
+    } finally {
+      setIsGeneratingSummary(false);
     }
   };
 
@@ -194,7 +245,40 @@ export function ComplianceResultsStep({
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-sm leading-relaxed">{analysisResult.summary}</p>
+          {/* AI Summary Section */}
+          <div className="space-y-3">
+            {isGeneratingSummary ? (
+              <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                <span className="text-sm text-blue-700">Generating AI summary...</span>
+              </div>
+            ) : (
+              <>
+                {analysisResult.summary && (
+                  <div className="p-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                    <div className="flex items-start gap-2">
+                      <Sparkles className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                      <div className="flex-1">
+                        <p className="text-sm leading-relaxed text-blue-900">{analysisResult.summary}</p>
+                        {!summaryError && LLMService.isAvailable() && (
+                          <p className="text-xs text-blue-600 mt-1">AI-generated summary</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {summaryError && (
+                  <Alert variant="default" className="border-yellow-200 bg-yellow-50">
+                    <AlertTriangle className="h-4 w-4 text-yellow-600" />
+                    <AlertDescription className="text-yellow-800">
+                      {summaryError}
+                    </AlertDescription>
+                  </Alert>
+                )}
+              </>
+            )}
+          </div>
           
           {/* Risk Details */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 p-4 bg-muted rounded-lg">
@@ -348,15 +432,6 @@ export function ComplianceResultsStep({
         </Collapsible>
       </Card>
 
-      {/* Navigation */}
-      <div className="flex justify-between">
-        <Button onClick={onPrevious} variant="outline">
-          Previous
-        </Button>
-        <Button onClick={onNext}>
-          Complete Analysis
-        </Button>
-      </div>
     </div>
   );
 }
