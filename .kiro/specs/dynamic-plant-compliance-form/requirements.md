@@ -53,15 +53,15 @@ This feature implements a dynamic, real-time plant compliance form that guides u
 
 ### Requirement 5
 
-**User Story:** As a user completing the compliance check, I want to receive a comprehensive report of applicable and non-applicable requirements with explanations, so that I understand exactly what I need to do.
+**User Story:** As a user completing the compliance check, I want to receive a comprehensive report with an AI-generated summary and detailed requirements, so that I understand exactly what I need to do.
 
 #### Acceptance Criteria
 
-1. WHEN all information is gathered THEN the system SHALL generate a compliance report
-2. WHEN displaying applicable requirements THEN the system SHALL show the requirement name, description, and source regulation
-3. WHEN displaying non-applicable requirements THEN the system SHALL explain why they don't apply (e.g., "pest not present in origin state")
-4. WHEN pests are not present in origin THEN the system SHALL list requirements that are waived due to absence of risk
-5. WHEN the report is complete THEN the system SHALL provide clear next steps for the user
+1. WHEN all information is gathered THEN the system SHALL generate a compliance report with an LLM-generated summary paragraph
+2. WHEN displaying the compliance results THEN the system SHALL show an AI-generated summary above the detailed requirements that explains the overall compliance situation in plain language
+3. WHEN displaying applicable requirements THEN the system SHALL show the requirement name, description, and source regulation below the summary
+4. WHEN displaying non-applicable requirements THEN the system SHALL explain why they don't apply (e.g., "pest not present in origin state")
+5. WHEN the LLM service is unavailable THEN the system SHALL display the detailed requirements without the summary paragraph
 
 ### Requirement 6
 
@@ -75,26 +75,4 @@ This feature implements a dynamic, real-time plant compliance form that guides u
 4. WHEN the form is in progress THEN the system SHALL show clear progress indicators
 5. IF the system encounters an error THEN the system SHALL provide user-friendly error messages with suggested actions
 
-### Requirement 7
 
-**User Story:** As a user who prefers natural conversation, I want to describe my plant movement needs in plain English, so that I can get compliance information without navigating complex forms.
-
-#### Acceptance Criteria
-
-1. WHEN I enter a natural language description THEN the system SHALL use LLM processing to extract commodity, origin, and destination information
-2. WHEN the LLM cannot determine specific details THEN the system SHALL ask clarifying questions in conversational format
-3. WHEN ambiguous commodity names are provided THEN the system SHALL use LLM to suggest the most likely matches with explanations
-4. WHEN I need help understanding requirements THEN the system SHALL provide LLM-generated explanations in plain language
-5. WHEN switching between chat and form interfaces THEN the system SHALL preserve all collected information
-
-### Requirement 8
-
-**User Story:** As a developer or system integrator, I want to access plant compliance functionality through a standardized API, so that I can integrate it with other agricultural or regulatory systems.
-
-#### Acceptance Criteria
-
-1. WHEN accessing the MCP server THEN the system SHALL provide standardized tools for commodity validation, pest lookup, and compliance checking
-2. WHEN external chatbots query the MCP server THEN the system SHALL return structured compliance data in a consistent format
-3. WHEN third-party applications integrate with the MCP server THEN the system SHALL provide comprehensive API documentation and examples
-4. WHEN the MCP server receives requests THEN the system SHALL validate inputs and return appropriate error messages for invalid data
-5. WHEN multiple systems access the MCP server concurrently THEN the system SHALL handle requests efficiently without performance degradation

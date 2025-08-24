@@ -34,51 +34,13 @@
   - Add requirement explanations and source attribution
   - _Requirements: 4.1, 4.2, 4.3, 5.1, 5.2, 5.3, 5.4, 5.5_
 
-- [ ] 6. Integrate LLM service for plant specialist chatbot
-  - Set up LLM service integration (OpenAI/Anthropic API)
-  - Create PlantSpecialistLLM service with domain-specific prompting
-  - Implement natural language processing for commodity extraction
-  - Add LLM-powered commodity disambiguation and suggestions
-  - _Requirements: 7.1, 7.2, 7.3, 7.4_
-
-- [ ] 7. Enhance Ask tab with conversational interface
-  - Replace simple textarea with ChatInterface component
-  - Implement MessageList component for conversation history
-  - Create ChatInput component with LLM integration
-  - Add conversation context management and response generation
-  - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5_
-
-- [ ] 8. Create MCP server for external integration
-  - Implement MCP server with standardized tool definitions
-  - Create MCP tools for commodity validation, pest lookup, and compliance checking
-  - Add structured data responses for external chatbots and applications
-  - Write comprehensive API documentation and examples
-  - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5_
-
-- [ ] 9. Update Results component for enhanced compliance display
-  - Modify existing Results component to handle new ComplianceResult structure
-  - Add sections for applicable and non-applicable requirements with explanations
-  - Implement enhanced requirement display with sources and action items
-  - Add integration with LLM-generated explanations
+- [x] 6. Integrate OpenRouter LLM service for compliance summarization using Supabase Edge Functions
+  - Create Supabase Edge Function to securely proxy requests to OpenRouter API
+  - Set up OpenRouter API integration in Edge Function with secure environment variable (OPENROUTER_API_KEY)
+  - Implement Edge Function request validation, sanitization, and rate limiting
+  - Create frontend LLMService class that calls the Supabase Edge Function endpoint
+  - Implement compliance result summarization that creates concise explanations
+  - Add comprehensive error handling and graceful fallback for LLM service failures
+  - Add request timeout handling and user feedback for API calls
+  - Deploy and test the Edge Function with proper CORS configuration
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
-
-- [ ] 10. Integrate dynamic form with existing InputTabs component
-  - Modify existing InputTabs to support dynamic guided form
-  - Replace static guided form with DynamicGuidedForm component
-  - Ensure seamless integration with existing onSubmitGuided callback
-  - Maintain existing styling and UI consistency
-  - _Requirements: 6.1, 6.2, 6.3, 6.4_
-
-- [ ] 11. Add comprehensive error handling and validation
-  - Implement validation for all form inputs with real-time feedback
-  - Add error handling for database queries and LLM API calls
-  - Create user-friendly error messages with correction guidance
-  - Add loading states and progress indicators throughout the application
-  - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_
-
-- [ ] 12. Write comprehensive tests for all new functionality
-  - Create unit tests for all service classes and utility functions
-  - Write component tests for all new React components
-  - Add integration tests for database queries and LLM interactions
-  - Create end-to-end tests for complete user journeys through both modes
-  - _Requirements: All requirements_

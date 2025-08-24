@@ -29,7 +29,7 @@ export interface NonApplicableRequirement {
 export interface ComplianceResult {
     applicable: ApplicableRequirement[];
     nonApplicable: NonApplicableRequirement[];
-    summary: string;
+    summary?: string; // Optional - populated by LLM service
     riskAssessment: RiskAssessment;
     recommendations: string[];
 }

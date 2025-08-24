@@ -3,6 +3,7 @@
 export { SupabaseService, supabaseService } from './supabase';
 export { ValidationService, validationService } from './validation';
 export { ComplianceEngine, complianceEngine } from './compliance-engine';
+export { LLMService } from './llm-service';
 export { supabase } from '../config/supabase';
 
 // Re-export types for convenience
@@ -30,3 +31,8 @@ export type {
     RiskAssessment,
     ComplianceEngineConfig,
 } from '../types/compliance';
+
+export type {
+    ComplianceSummaryRequest,
+    LLMServiceResponse,
+} from './llm-service';
