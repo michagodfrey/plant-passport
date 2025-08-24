@@ -5,7 +5,7 @@ from supabase import Client, create_client
 
 # Supabase connection details - replace with your actual values
 SUPABASE_URL = "https://onmrkraetqksxitxyykh.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ubXJrcmFldHFrc3hpdHh5eWtoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NTkwOTY1OCwiZXhwIjoyMDcxNDg1NjU4fQ.THdXZdhdNCNc1SnAgGC7gxgsmuj1iVhNlton67byZD4"
+SUPABASE_KEY = "xxx"
 
 # Format: (IR_number, title, start_page, end_page, is_revoked)
 import_requirements = [
