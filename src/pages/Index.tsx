@@ -7,7 +7,6 @@ import { ResourceGrid } from "@/components/ResourceGrid";
 import { Footer } from "@/components/Footer";
 import { fetchRequirements } from "@/services/mock-backend";
 import { GuidedInput, AskInput, BackendResponse } from "@/types/plant-passport";
-import { RESOURCES } from "@/data/resources";
 import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
@@ -86,7 +85,7 @@ const Index = () => {
         
         <FAQ />
         
-        <ResourceGrid resources={RESOURCES} />
+        <ResourceGrid />
       </main>
       
       <Footer />

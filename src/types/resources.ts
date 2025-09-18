@@ -1,6 +1,6 @@
 // Resource types for official state/territory links
 
-export type ResourceTag = "PQM" | "Contacts" | "Zones" | "Guide" | "Search" | "Outbreaks" | "National";
+export type ResourceTag = "Manual" | "Contacts" | "Zones" | "Guide" | "Search" | "Outbreaks" | "National";
 
 export type ResourceLink = {
   label: string;

@@ -237,11 +237,16 @@ export function ComplianceResultsStep({
             Compliance Summary
           </CardTitle>
           <div className="flex items-center gap-2">
-            <Badge variant={getRiskBadgeVariant(analysisResult.riskAssessment.overallRisk)}>
+            <Badge
+              variant={getRiskBadgeVariant(
+                analysisResult.riskAssessment.overallRisk
+              )}
+            >
               {analysisResult.riskAssessment.overallRisk.toUpperCase()} RISK
             </Badge>
             <span className="text-sm text-muted-foreground">
-              {analysisResult.riskAssessment.requirementsCount} requirement(s) apply
+              {analysisResult.riskAssessment.requirementsCount} requirement(s)
+              apply
             </span>
           </div>
         </CardHeader>
@@ -251,7 +256,9 @@ export function ComplianceResultsStep({
             {isGeneratingSummary ? (
               <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg">
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-                <span className="text-sm text-blue-700">Generating AI summary...</span>
+                <span className="text-sm text-blue-700">
+                  Generating AI summary...
+                </span>
               </div>
             ) : (
               <>
@@ -260,20 +267,27 @@ export function ComplianceResultsStep({
                     <div className="flex items-start gap-2">
                       <Sparkles className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
                       <div className="flex-1">
-                        <div 
+                        <div
                           className="text-sm leading-relaxed text-blue-900 prose prose-sm max-w-none"
-                          dangerouslySetInnerHTML={{ __html: markdownToHtml(analysisResult.summary) }}
+                          dangerouslySetInnerHTML={{
+                            __html: markdownToHtml(analysisResult.summary),
+                          }}
                         />
                         {!summaryError && LLMService.isAvailable() && (
-                          <p className="text-xs text-blue-600 mt-1">AI-generated summary</p>
+                          <p className="text-xs text-blue-600 mt-1">
+                            AI-generated summary
+                          </p>
                         )}
                       </div>
                     </div>
                   </div>
                 )}
-                
+
                 {summaryError && (
-                  <Alert variant="default" className="border-yellow-200 bg-yellow-50">
+                  <Alert
+                    variant="default"
+                    className="border-yellow-200 bg-yellow-50"
+                  >
                     <AlertTriangle className="h-4 w-4 text-yellow-600" />
                     <AlertDescription className="text-yellow-800">
                       {summaryError}
@@ -283,20 +297,20 @@ export function ComplianceResultsStep({
               </>
             )}
           </div>
-          
+
           {/* Risk Details */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 p-4 bg-muted rounded-lg">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-primary">
-                {analysisResult.riskAssessment.pestsPresent}
-              </div>
-              <div className="text-xs text-muted-foreground">Pests Present</div>
-            </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">
                 {analysisResult.riskAssessment.pestsTotal}
               </div>
               <div className="text-xs text-muted-foreground">Total Pests</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-primary">
+                {analysisResult.riskAssessment.pestsPresent}
+              </div>
+              <div className="text-xs text-muted-foreground">Pests Present</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-destructive">
@@ -318,7 +332,7 @@ export function ComplianceResultsStep({
       <Card>
         <Collapsible
           open={expandedSections.applicable}
-          onOpenChange={() => toggleSection('applicable')}
+          onOpenChange={() => toggleSection("applicable")}
         >
           <CollapsibleTrigger asChild>
             <CardHeader className="cursor-pointer hover:bg-muted/50 transition-colors">
@@ -344,13 +358,17 @@ export function ComplianceResultsStep({
                 <Alert>
                   <CheckCircle className="h-4 w-4" />
                   <AlertDescription>
-                    No specific requirements identified for this shipment. Standard interstate movement rules may still apply.
+                    No specific requirements identified for this shipment.
+                    Standard interstate movement rules may still apply.
                   </AlertDescription>
                 </Alert>
               ) : (
                 <div className="space-y-4">
                   {analysisResult.applicable.map((req, index) => (
-                    <ApplicableRequirementCard key={req.requirement.id} requirement={req} />
+                    <ApplicableRequirementCard
+                      key={req.requirement.id}
+                      requirement={req}
+                    />
                   ))}
                 </div>
               )}
@@ -364,14 +382,15 @@ export function ComplianceResultsStep({
         <Card>
           <Collapsible
             open={expandedSections.nonApplicable}
-            onOpenChange={() => toggleSection('nonApplicable')}
+            onOpenChange={() => toggleSection("nonApplicable")}
           >
             <CollapsibleTrigger asChild>
               <CardHeader className="cursor-pointer hover:bg-muted/50 transition-colors">
                 <div className="flex items-center justify-between">
                   <CardTitle className="flex items-center gap-2">
                     <XCircle className="h-5 w-5 text-muted-foreground" />
-                    Non-Applicable Requirements ({analysisResult.nonApplicable.length})
+                    Non-Applicable Requirements (
+                    {analysisResult.nonApplicable.length})
                   </CardTitle>
                   {expandedSections.nonApplicable ? (
                     <ChevronUp className="h-4 w-4" />
@@ -388,7 +407,10 @@ export function ComplianceResultsStep({
               <CardContent>
                 <div className="space-y-3">
                   {analysisResult.nonApplicable.map((req, index) => (
-                    <NonApplicableRequirementCard key={req.requirement.id} requirement={req} />
+                    <NonApplicableRequirementCard
+                      key={req.requirement.id}
+                      requirement={req}
+                    />
                   ))}
                 </div>
               </CardContent>
@@ -401,7 +423,7 @@ export function ComplianceResultsStep({
       <Card>
         <Collapsible
           open={expandedSections.recommendations}
-          onOpenChange={() => toggleSection('recommendations')}
+          onOpenChange={() => toggleSection("recommendations")}
         >
           <CollapsibleTrigger asChild>
             <CardHeader className="cursor-pointer hover:bg-muted/50 transition-colors">
@@ -435,7 +457,6 @@ export function ComplianceResultsStep({
           </CollapsibleContent>
         </Collapsible>
       </Card>
-
     </div>
   );
 }

@@ -7,7 +7,7 @@ export function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="text-center md:text-left">
             <p className="text-sm text-muted-foreground">
-              © 2024 PlantPassport.ai. Helping ensure compliant plant movements across Australia.
+              © 2025 PlantPassport.ai. Helping ensure compliant plant movements across Australia.
             </p>
           </div>
           
